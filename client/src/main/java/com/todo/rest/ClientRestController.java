@@ -11,6 +11,9 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.text.html.parser.Entity;
+import javax.ws.rs.core.MediaType;
+
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
@@ -22,6 +25,10 @@ import org.apache.http.message.BasicNameValuePair;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.ClientResponse;
+import com.sun.jersey.api.client.WebResource;
 
 @RestController
 @RequestMapping(value = "/")
@@ -149,7 +156,7 @@ public class ClientRestController {
 			params.add(new BasicNameValuePair("username", "bhu"));
 			params.add(new BasicNameValuePair("name", "bhupal"));
 			post.setEntity(new UrlEncodedFormEntity(params));
-			
+
 			HttpResponse response = client.execute(post);
 			BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
 			String line = "";
@@ -164,5 +171,33 @@ public class ClientRestController {
 		}
 
 		return "returned from service one/2: " + finalOutput.toString();
+	}
+
+	@RequestMapping(value = "/postdata/3", method = RequestMethod.GET)
+	public String jerseypostdata() {
+		String URLString = "http://localhost:8010/postdata";
+		StringBuilder finalOutput = new StringBuilder();
+
+		try {
+			Client client = Client.create();
+			String input = "{\"username\":\"bhup\",\"name\":\"bhupal\"}";
+
+			WebResource ws = client.resource(URLString);
+			ClientResponse response = ws.type(MediaType.APPLICATION_JSON).post(ClientResponse.class, input);
+
+			if (response.getStatus() != 200) {
+				System.out.println("Error From Server:");
+				System.out.println("Error Code: " + response.getStatus());
+			} else {
+				String output = response.getEntity(String.class);
+				System.out.println("Output from Server:\n" + output);
+				finalOutput.append(output);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return "returned from service one/3: " + finalOutput.toString();
 	}
 }
