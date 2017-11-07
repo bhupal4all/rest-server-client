@@ -1,6 +1,7 @@
 package com.rest;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -22,17 +23,14 @@ public class JSONService {
 		try {
 			Client client = Client.create();
 
-			WebResource webResource = client
-					.resource("http://localhost:8080/sampleservice/rest/post");
+			WebResource webResource = client.resource("http://localhost:8080/sampleservice/rest/post");
 
 			String input = "{\"username\":\"defaultuser\",\"password\":\"deafaultpassword\"}";
 
-			ClientResponse response = webResource.type("application/json")
-					.post(ClientResponse.class, input);
+			ClientResponse response = webResource.type("application/json").post(ClientResponse.class, input);
 
 			if (response.getStatus() != 201) {
-				throw new RuntimeException("Failed : HTTP error code : "
-						+ response.getStatus());
+				throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
 			}
 
 			output = response.getEntity(String.class);
@@ -40,7 +38,18 @@ public class JSONService {
 			output = "Exception:: " + e.getMessage();
 		}
 
-		return "Output from service: "+output;
+		return "Output from service: " + output;
+	}
 
-	}	
+	@Path("/postform")
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response postform(@FormParam("username") String username, @FormParam("password") String password) {
+		StringBuilder output = new StringBuilder();
+		output.append("Received ");
+		output.append("[ Username: "+username+" ]");
+		output.append("[ Password: "+password+" ]");
+
+		return Response.status(200).entity(output.toString()).build();
+	}
 }

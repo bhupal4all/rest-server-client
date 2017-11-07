@@ -18,6 +18,7 @@
   <%@ page import="com.sun.jersey.api.client.Client" %>
   <%@ page import="com.sun.jersey.api.client.ClientResponse" %>
   <%@ page import="com.sun.jersey.api.client.WebResource" %>
+  <%@ page import="com.sun.jersey.api.representation.Form" %>
   
   <%
   
@@ -46,6 +47,37 @@
   %>
   
   <h3><%=output%><h3>
+  
+  
+<form action="/client/rest/postform" method="post">
+    <label for="username">Username: </label>
+    <input id="username" type="text" name="username" />
+    <input type="submit" value="Submit" />
+</form>
+
+  <%
+  
+  String output2 = "";
+		try {
+			Client client = Client.create();
+
+			WebResource webResource = client
+					.resource("http://localhost:8080/client/rest/postform");
+
+			Form f = new Form();    
+			f.add("username", "FormUser");  
+			f.add("password", "FormPassword");
+
+			ClientResponse res = webResource.post(ClientResponse.class, f);
+
+			output2 = res.getEntity(String.class);
+		} catch (Exception e) {
+			output2 = "Exception:: " + e.getMessage();
+		}
+  
+  %>
+  
+  <h3>Sending Form data from code and response ==> <%=output2%><h3>
   
   
 </body>
