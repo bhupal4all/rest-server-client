@@ -88,5 +88,41 @@
 	<li>Context Path: <%=request.getContextPath()%></li>
   </ul>
   
+  
+  <h3>Window Open with Form Data</h3>
+  
+  <script>
+	function OpenWindowWithPost(url, windowoption, type, params)
+	{
+		var form = document.createElement("form");
+		form.setAttribute("method", "post");
+		form.setAttribute("action", url);
+		form.setAttribute("target", type);
+
+		for (var i in params) {
+			if (params.hasOwnProperty(i)) {
+				var input = document.createElement('input');
+				input.type = 'hidden';
+				input.name = i;
+				input.value = params[i];
+				form.appendChild(input);
+			}
+		}
+		
+		document.body.appendChild(form);
+		window.open("", type, windowoption);
+		form.submit();
+		document.body.removeChild(form);
+	}
+
+	function openPopupPage(url) {
+		var param = {'username':'window_username', 'password':'window_password'};
+		OpenWindowWithPost(url, "width=1000, height=600, left=100, top=100, resizable=yes, scrollbars=yes", "newfile", param);
+	}
+  </script>
+  
+  <a href="javascript:openPopupPage('/client/rest/postform')">New Window With Post Data</a>
+  <a href="javascript:openPopupPage('/client/rest')">New Window With Page Data</a>
+
 </body>
 </html>
