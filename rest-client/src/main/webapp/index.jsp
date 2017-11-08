@@ -79,6 +79,14 @@
   
   <h3>Sending Form data from code and response ==> <%=output2%><h3>
   
+  <h3>Here Current Application Info</h3>
+  <ul>
+	<li>Protocol: <%=request.getProtocol()%></li>
+	<li>is Secure: <%=request.isSecure()%>, Used <%=request.isSecure()?"Https":"Http"%></li>
+	<li>Server Name: <%=request.getServerName()%></li>
+	<li>Server Port: <%=request.getServerPort()%></li>
+	<li>Context Path: <%=request.getContextPath()%></li>
+  </ul>
   
 </body>
 </html>
